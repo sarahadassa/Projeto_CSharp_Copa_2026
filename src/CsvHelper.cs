@@ -1,5 +1,8 @@
 namespace Copa2026;
 
+// ============================================================
+//  LEITURA E GRAVAÇÃO DE CSV
+// ============================================================
 static class CsvHelper
 {
     // ======================== SALVAR ========================
@@ -65,21 +68,28 @@ static class CsvHelper
             return;
         }
 
-        Dados.TotalSelecoes = 0;
-        string[] linhas = File.ReadAllLines(Dados.CsvSelecoes);
-        for (int i = 1; i < linhas.Length; i++) // pula cabeçalho
+        try
         {
-            string[] f = linhas[i].Split(';');
-            if (f.Length < 4) continue;
-            Dados.Selecoes[Dados.TotalSelecoes++] = new Selecao
+            Dados.TotalSelecoes = 0;
+            string[] linhas = File.ReadAllLines(Dados.CsvSelecoes);
+            for (int i = 1; i < linhas.Length; i++) // pula cabeçalho
             {
-                Id    = int.Parse(f[0]),
-                Nome  = f[1],
-                Grupo = f[2],
-                Ativo = f[3] == "true"
-            };
+                string[] f = linhas[i].Split(';');
+                if (f.Length < 4) continue;
+                Dados.Selecoes[Dados.TotalSelecoes++] = new Selecao
+                {
+                    Id = int.Parse(f[0]),
+                    Nome = f[1],
+                    Grupo = f[2],
+                    Ativo = f[3] == "true"
+                };
+            }
+            Console.WriteLine($"  {Dados.TotalSelecoes} seleções carregadas.");
         }
-        Console.WriteLine($"  {Dados.TotalSelecoes} seleções carregadas.");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"  [ERRO] Falha ao ler {Dados.CsvSelecoes}: {ex.Message}");
+        }
     }
 
     static void CarregarEstadios()
@@ -90,23 +100,30 @@ static class CsvHelper
             return;
         }
 
-        Dados.TotalEstadios = 0;
-        string[] linhas = File.ReadAllLines(Dados.CsvEstadios);
-        for (int i = 1; i < linhas.Length; i++)
+        try
         {
-            string[] f = linhas[i].Split(';');
-            if (f.Length < 6) continue;
-            Dados.Estadios[Dados.TotalEstadios++] = new Estadio
+            Dados.TotalEstadios = 0;
+            string[] linhas = File.ReadAllLines(Dados.CsvEstadios);
+            for (int i = 1; i < linhas.Length; i++)
             {
-                Id         = int.Parse(f[0]),
-                Nome       = f[1],
-                Cidade     = f[2],
-                Pais       = f[3],
-                Capacidade = int.Parse(f[4]),
-                Ativo      = f[5] == "true"
-            };
+                string[] f = linhas[i].Split(';');
+                if (f.Length < 6) continue;
+                Dados.Estadios[Dados.TotalEstadios++] = new Estadio
+                {
+                    Id = int.Parse(f[0]),
+                    Nome = f[1],
+                    Cidade = f[2],
+                    Pais = f[3],
+                    Capacidade = int.Parse(f[4]),
+                    Ativo = f[5] == "true"
+                };
+            }
+            Console.WriteLine($"  {Dados.TotalEstadios} estádios carregados.");
         }
-        Console.WriteLine($"  {Dados.TotalEstadios} estádios carregados.");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"  [ERRO] Falha ao ler {Dados.CsvEstadios}: {ex.Message}");
+        }
     }
 
     static void CarregarJogos()
@@ -117,28 +134,35 @@ static class CsvHelper
             return;
         }
 
-        Dados.TotalJogos = 0;
-        string[] linhas = File.ReadAllLines(Dados.CsvJogos);
-        for (int i = 1; i < linhas.Length; i++)
+        try
         {
-            string[] f = linhas[i].Split(';');
-            if (f.Length < 12) continue;
-            Dados.Jogos[Dados.TotalJogos++] = new Jogo
+            Dados.TotalJogos = 0;
+            string[] linhas = File.ReadAllLines(Dados.CsvJogos);
+            for (int i = 1; i < linhas.Length; i++)
             {
-                Id                 = int.Parse(f[0]),
-                Fase               = f[1],
-                Grupo              = f[2],
-                Data               = f[3],
-                IdEstadio          = int.Parse(f[4]),
-                IdTimeA            = int.Parse(f[5]),
-                IdTimeB            = int.Parse(f[6]),
-                GolsA              = int.Parse(f[7]),
-                GolsB              = int.Parse(f[8]),
-                Realizado          = f[9]  == "true",
-                IdVencedorPenaltis = int.Parse(f[10]),
-                Ativo              = f[11] == "true"
-            };
+                string[] f = linhas[i].Split(';');
+                if (f.Length < 12) continue;
+                Dados.Jogos[Dados.TotalJogos++] = new Jogo
+                {
+                    Id = int.Parse(f[0]),
+                    Fase = f[1],
+                    Grupo = f[2],
+                    Data = f[3],
+                    IdEstadio = int.Parse(f[4]),
+                    IdTimeA = int.Parse(f[5]),
+                    IdTimeB = int.Parse(f[6]),
+                    GolsA = int.Parse(f[7]),
+                    GolsB = int.Parse(f[8]),
+                    Realizado = f[9] == "true",
+                    IdVencedorPenaltis = int.Parse(f[10]),
+                    Ativo = f[11] == "true"
+                };
+            }
+            Console.WriteLine($"  {Dados.TotalJogos} jogos carregados.");
         }
-        Console.WriteLine($"  {Dados.TotalJogos} jogos carregados.");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"  [ERRO] Falha ao ler {Dados.CsvJogos}: {ex.Message}");
+        }
     }
 }
